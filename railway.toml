@@ -1,0 +1,13 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+
+[env]
+ENVIRONMENT = "production"
+LOG_LEVEL = "INFO"
+CACHE_DURATION = "30"
+RATE_LIMIT_PER_MINUTE = "30"

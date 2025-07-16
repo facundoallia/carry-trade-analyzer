@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analizador de Carry Trade - Bonos Argentinos</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Analizador de Carry Trade - Bonos Argentinos</h1>
+            <p class="subtitle">Análisis profesional de oportunidades de carry trade en bonos del Tesoro</p>
+            <div class="status-indicator">
+                <span id="last-update">Última actualización: --</span>
+                <button id="refresh-btn" class="refresh-btn">Actualizar Datos</button>
+            </div>
+        </header>
+
+        <!-- Strategy Explanation Panel -->
+        <section class="strategy-section">
+            <h2>¿Qué es el Carry Trade de Bonos?</h2>
+            <div class="strategy-content">
+                <div class="strategy-explanation">
+                    <p class="strategy-intro">
+                        <strong>Esta estrategia consiste en vender USD al tipo de cambio MEP actual de $<span id="mep-value">--</span>, comprar bonos en pesos, mantenerlos hasta el vencimiento y recomprar los dólares.</strong> 
+                        El porcentaje que se presenta en la tabla es el rendimiento directo de esta estrategia completa medido en dólares.
+                    </p>
+                    
+                    <div class="strategy-details">
+                        <div class="strategy-point">
+                            <h4>🎯 Concepto del Carry Trade</h4>
+                            <p>Consiste en capturar el diferencial entre las altas tasas en pesos argentinos y las bajas tasas en dólares, 
+                            esperando que la devaluación del peso sea menor al diferencial de tasas durante el período de inversión.</p>
+                        </div>
+                        
+                        <div class="strategy-point">
+                            <h4>📊 Banda Cambiaria</h4>
+                            <p>El análisis considera la banda cambiaria del BCRA que inició el 14/04/2025 con un crawling peg del 1% mensual. 
+                            El "techo de la banda" representa el escenario más conservador de devaluación.</p>
+                        </div>
+                        
+                        <div class="strategy-point">
+                            <h4>⚠️ Factores de Riesgo</h4>
+                            <p>Los principales riesgos incluyen: devaluación acelerada del peso, cambios en la política monetaria, 
+                            riesgo de crédito soberano, y volatilidad de los mercados financieros locales.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <main>
+            <section class="data-section">
+                <h2>Matriz de Rendimientos por Escenario</h2>
+                <div class="table-container">
+                    <table id="carry-table">
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Precio</th>
+                                <th>Fecha de vencimiento</th>
+                                <th>Días al vencimiento</th>
+                                <th>TEM</th>
+                                <th>TNA</th>
+                                <th>TEA</th>
+                                <th>Carry 1000</th>
+                                <th>Carry 1100</th>
+                                <th>Carry 1200</th>
+                                <th>Carry 1300</th>
+                                <th>Carry 1400</th>
+                                <th>Carry Techo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="loading" id="table-loading">
+                    <div class="spinner"></div>
+                    <p>Cargando datos de mercado...</p>
+                </div>
+                <div class="error-message" id="table-error" style="display: none;">
+                    <p>Error al cargar los datos. Verificando conexión...</p>
+                </div>
+            </section>
+
+            <section class="chart-section">
+                <h2>Breakeven MEP vs Techo de Banda Cambiaria</h2>
+                <div class="chart-container">
+                    <canvas id="breakeven-chart"></canvas>
+                </div>
+                <div class="loading" id="chart-loading">
+                    <div class="spinner"></div>
+                    <p>Generando visualización...</p>
+                </div>
+                <div class="error-message" id="chart-error" style="display: none;">
+                    <p>Error al generar el gráfico. Verificando datos...</p>
+                </div>
+            </section>
+
+            <!-- Investment Simulator Panel -->
+            <section class="simulator-section">
+                <h2>Simulador de Inversión</h2>
+                <div class="simulator-content">
+                    <div class="simulator-inputs">
+                        <div class="input-group">
+                            <label for="investment-amount">Monto en USD a invertir:</label>
+                            <input type="number" id="investment-amount" placeholder="1000" min="1" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="bond-selector">Seleccionar bono:</label>
+                            <select id="bond-selector">
+                                <option value="">Seleccione un bono...</option>
+                            </select>
+                        </div>
+                        <button id="simulate-btn" class="simulate-btn">Simular Inversión</button>
+                    </div>
+                    
+                    <div class="simulator-results" id="simulator-results">
+                        <h3>Resultados de la Simulación</h3>
+                        <div class="results-table-container">
+                            <table id="simulation-table">
+                                <thead>
+                                    <tr>
+                                        <th>Métrica</th>
+                                        <th>USD 1000</th>
+                                        <th>USD 1100</th>
+                                        <th>USD 1200</th>
+                                        <th>USD 1300</th>
+                                        <th>USD 1400</th>
+                                        <th>Techo Banda</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="simulation-body">
+                                    <!-- Simulation results will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Datos obtenidos de data912.com | Herramienta de análisis financiero - No constituye asesoramiento de inversión</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
