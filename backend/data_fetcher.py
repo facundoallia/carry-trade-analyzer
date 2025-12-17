@@ -4,6 +4,10 @@ import os
 from datetime import date
 from typing import Dict, Any, List
 from backend.config import MEP_ENDPOINT, NOTES_ENDPOINT, BONDS_ENDPOINT, TICKERS
+import urllib3
+
+# Disable SSL warnings for self-signed certificates
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class DataFetcher:
     """Fetches real-time financial data from data912.com API"""
@@ -15,6 +19,8 @@ class DataFetcher:
         })
         # Production timeout configuration
         self.timeout = int(os.getenv("API_TIMEOUT", 10))
+        # Disable SSL verification for self-signed certificates
+        self.session.verify = False
         
     def _make_request(self, url: str, timeout: int = None) -> requests.Response:
         """Make HTTP request with proper timeout and error handling"""
