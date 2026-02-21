@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analizador de Carry Trade - Bonos Argentinos</title>
     <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- Tippy.js for tooltips -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css">
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light.css">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
 </head>
 <body>
@@ -25,26 +33,27 @@
             <div class="strategy-content">
                 <div class="strategy-explanation">
                     <p class="strategy-intro">
-                        <strong>Esta estrategia consiste en vender USD al tipo de cambio MEP actual de $<span id="mep-value">--</span>, comprar bonos en pesos, mantenerlos hasta el vencimiento y recomprar los dólares.</strong> 
+                        <strong>Esta estrategia consiste en vender USD al tipo de cambio MEP actual de $<span id="mep-value">--</span>, comprar bonos en pesos, mantenerlos hasta el vencimiento y recomprar los dólares.</strong>
                         El porcentaje que se presenta en la tabla es el rendimiento directo de esta estrategia completa medido en dólares.
                     </p>
-                    
+
                     <div class="strategy-details">
                         <div class="strategy-point">
                             <h4>🎯 Concepto del Carry Trade</h4>
-                            <p>Consiste en capturar el diferencial entre las altas tasas en pesos argentinos y las bajas tasas en dólares, 
+                            <p>Consiste en capturar el diferencial entre las altas tasas en pesos argentinos y las bajas tasas en dólares,
                             esperando que la devaluación del peso sea menor al diferencial de tasas durante el período de inversión.</p>
                         </div>
-                        
+
                         <div class="strategy-point">
                             <h4>📊 Banda Cambiaria</h4>
-                            <p>El análisis considera la banda cambiaria del BCRA que inició el 14/04/2025 con un crawling peg del 1% mensual. 
+                            <p>El análisis considera la banda cambiaria del BCRA que inició el 14/04/2025 con un crawling peg del 1% mensual.
+                            A partir del 01/01/2026, las bandas evolucionan según la <strong>inflación T-2 proyectada por el Relevamiento de Expectativas de Mercado (REM)</strong> del BCRA.
                             El "techo de la banda" representa el escenario más conservador de devaluación.</p>
                         </div>
-                        
+
                         <div class="strategy-point">
                             <h4>⚠️ Factores de Riesgo</h4>
-                            <p>Los principales riesgos incluyen: devaluación acelerada del peso, cambios en la política monetaria, 
+                            <p>Los principales riesgos incluyen: devaluación acelerada del peso, cambios en la política monetaria,
                             riesgo de crédito soberano, y volatilidad de los mercados financieros locales.</p>
                         </div>
                     </div>
@@ -59,19 +68,20 @@
                     <table id="carry-table">
                         <thead>
                             <tr>
-                                <th>Ticker</th>
-                                <th>Precio</th>
-                                <th>Fecha de vencimiento</th>
-                                <th>Días al vencimiento</th>
-                                <th>TEM</th>
-                                <th>TNA</th>
-                                <th>TEA</th>
-                                <th>Carry 1000</th>
-                                <th>Carry 1100</th>
-                                <th>Carry 1200</th>
-                                <th>Carry 1300</th>
-                                <th>Carry 1400</th>
-                                <th>Carry Techo</th>
+                                <th data-tooltip="ticker">Ticker</th>
+                                <th data-tooltip="precio">Precio</th>
+                                <th data-tooltip="fecha">Fecha de vencimiento</th>
+                                <th data-tooltip="dias">Días al vencimiento</th>
+                                <th data-tooltip="tem">TEM</th>
+                                <th data-tooltip="tna">TNA</th>
+                                <th data-tooltip="tea">TEA</th>
+                                <th data-tooltip="carry1300">Carry 1300</th>
+                                <th data-tooltip="carry1400">Carry 1400</th>
+                                <th data-tooltip="carry1500">Carry 1500</th>
+                                <th data-tooltip="carry1600">Carry 1600</th>
+                                <th data-tooltip="carry1700">Carry 1700</th>
+                                <th data-tooltip="carry1800">Carry 1800</th>
+                                <th data-tooltip="carrytecho">Carry Techo</th>
                             </tr>
                         </thead>
                         <tbody id="table-body">
@@ -127,11 +137,12 @@
                                 <thead>
                                     <tr>
                                         <th>Métrica</th>
-                                        <th>USD 1000</th>
-                                        <th>USD 1100</th>
-                                        <th>USD 1200</th>
-                                        <th>USD 1300</th>
-                                        <th>USD 1400</th>
+                                        <th>MEP 1300</th>
+                                        <th>MEP 1400</th>
+                                        <th>MEP 1500</th>
+                                        <th>MEP 1600</th>
+                                        <th>MEP 1700</th>
+                                        <th>MEP 1800</th>
                                         <th>Techo Banda</th>
                                     </tr>
                                 </thead>
@@ -142,6 +153,128 @@
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <!-- Methodology Section (Collapsible) -->
+            <section class="info-section">
+                <details id="methodology-details">
+                    <summary><h2>Metodología: Estimación de Bandas Cambiarias</h2></summary>
+                    <div class="info-content">
+                        <div class="methodology-explanation">
+                            <h3>¿Cómo se estiman las bandas?</h3>
+                            <p>Las bandas cambiarias evolucionan diariamente según la <strong>inflación T-2</strong> (dos meses atrás), utilizando datos reales del INDEC cuando están disponibles y proyecciones del REM para meses futuros.</p>
+                            <div class="formula-box">
+                                <h4>Fórmula de evolución diaria</h4>
+                                <code>Banda<sub>día</sub> = Banda<sub>día-1</sub> × (1 + tasa_diaria)</code>
+                                <p>Donde: <code>tasa_diaria = (1 + inflación_mensual_T-2)<sup>1/días_del_mes</sup> - 1</code></p>
+                                <p>La inflación T-2 corresponde a la inflación de <strong>dos meses atrás</strong>. Por ejemplo, la banda de marzo 2026 evoluciona según la inflación de enero 2026.</p>
+                            </div>
+
+                            <h3>Proyecciones REM - IPC General (mediana)</h3>
+                            <p id="rem-update-info">Cargando datos del REM...</p>
+                            <div class="rem-projections-table">
+                                <table class="compact-table" id="rem-table">
+                                    <thead id="rem-table-head">
+                                        <tr><th>Cargando...</th></tr>
+                                    </thead>
+                                    <tbody id="rem-table-body">
+                                        <tr><td>Cargando datos del REM...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h3>Prioridad de datos para la banda</h3>
+                            <ol>
+                                <li><strong>Datos reales INDEC</strong> — Se priorizan siempre sobre cualquier proyección</li>
+                                <li><strong>Proyecciones mensuales REM</strong> — Mediana de ~45 economistas profesionales</li>
+                                <li><strong>Calibración con proyección anual REM</strong> — Para meses sin dato mensual específico</li>
+                                <li><strong>Fallback conservador (2,0%)</strong> — Solo si no hay ningún dato disponible</li>
+                            </ol>
+                        </div>
+                    </div>
+                </details>
+            </section>
+
+            <!-- API REM Section (Collapsible) -->
+            <section class="info-section">
+                <details id="api-rem-details">
+                    <summary><h2>API REM - BCRA (Datos Abiertos)</h2></summary>
+                    <div class="info-content">
+                        <div class="api-explanation">
+                            <p>Los datos de inflación proyectada provienen de la <strong>API REM - BCRA</strong>, un proyecto open-source que automatiza la lectura, normalización y distribución del Relevamiento de Expectativas de Mercado del Banco Central.</p>
+
+                            <h3>Pipeline de datos</h3>
+                            <div class="pipeline-steps">
+                                <div class="pipeline-step">
+                                    <span class="step-number">1</span>
+                                    <div>
+                                        <strong>Descarga automática</strong>
+                                        <p>GitHub Actions descarga el archivo Excel del REM desde bcra.gob.ar (días 1-15 de cada mes)</p>
+                                    </div>
+                                </div>
+                                <div class="pipeline-step">
+                                    <span class="step-number">2</span>
+                                    <div>
+                                        <strong>Procesamiento</strong>
+                                        <p>Python + Pandas parsea, normaliza y estructura 19 tablas JSON con medianas, percentiles y proyecciones de ~45 economistas</p>
+                                    </div>
+                                </div>
+                                <div class="pipeline-step">
+                                    <span class="step-number">3</span>
+                                    <div>
+                                        <strong>Distribución</strong>
+                                        <p>Los datos se almacenan en Cloudflare R2 y se sirven globalmente via Cloudflare Workers con cache de 1 hora</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3>Endpoints disponibles</h3>
+                            <div class="api-endpoints-box">
+                                <table class="compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Endpoint</th>
+                                            <th>Descripción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td><code>/api/metadata</code></td><td>Información sobre última actualización</td></tr>
+                                        <tr><td><code>/api/ipc_general</code></td><td>Inflación general (IPC)</td></tr>
+                                        <tr><td><code>/api/ipc_nucleo</code></td><td>Inflación núcleo</td></tr>
+                                        <tr><td><code>/api/tipo_cambio</code></td><td>Tipo de cambio nominal (USD/ARS)</td></tr>
+                                        <tr><td><code>/api/tasa_interes</code></td><td>Tasa de interés (TAMAR)</td></tr>
+                                        <tr><td><code>/api/pbi</code></td><td>PIB a precios constantes</td></tr>
+                                        <tr><td><code>/api/exportaciones</code></td><td>Exportaciones</td></tr>
+                                        <tr><td><code>/api/importaciones</code></td><td>Importaciones</td></tr>
+                                        <tr><td><code>/api/desocupacion</code></td><td>Tasa de desocupación</td></tr>
+                                        <tr><td><code>/api/resultado_primario</code></td><td>Resultado primario SPNF</td></tr>
+                                        <tr><td><code>/api/bloques</code></td><td>Índice maestro de todas las tablas</td></tr>
+                                    </tbody>
+                                </table>
+                                <p class="api-note">Cada tabla tiene además su versión <code>_top10</code> con los pronósticos individuales de los 10 mejores pronosticadores.</p>
+                            </div>
+
+                            <h3>Ejemplo de uso</h3>
+                            <pre><code>// JavaScript
+fetch('https://bcra-rem-api.facujallia.workers.dev/api/ipc_general')
+  .then(r => r.json())
+  .then(data => console.log(data.datos));
+
+# Python
+import requests
+data = requests.get('https://bcra-rem-api.facujallia.workers.dev/api/tipo_cambio').json()</code></pre>
+
+                            <h3>Tecnologías</h3>
+                            <p><strong>GitHub Actions</strong> (orquestación) → <strong>Python + Pandas</strong> (parsing) → <strong>Cloudflare R2</strong> (almacenamiento) → <strong>Cloudflare Workers</strong> (API serverless)</p>
+
+                            <p class="api-links">
+                                <strong>Base URL:</strong> <code>https://bcra-rem-api.facujallia.workers.dev</code><br>
+                                <strong>Código fuente:</strong> <a href="https://github.com/facundoallia/rem-bcra-api" target="_blank">github.com/facundoallia/rem-bcra-api</a><br>
+                                <strong>Acceso:</strong> API pública, sin autenticación. Rate limit: 1 req/min por IP.
+                            </p>
+                        </div>
+                    </div>
+                </details>
             </section>
         </main>
 
