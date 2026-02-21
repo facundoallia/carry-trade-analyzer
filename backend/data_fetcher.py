@@ -6,6 +6,10 @@ from datetime import date, datetime
 from typing import Dict, Any, List, Optional
 from pathlib import Path
 from backend.config import MEP_ENDPOINT, NOTES_ENDPOINT, BONDS_ENDPOINT, TICKERS
+import urllib3
+
+# Disable SSL warnings for self-signed certificates
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Persistent MEP storage file
 LAST_MEP_FILE = Path(__file__).parent.parent / "cache" / "last_mep.json"
