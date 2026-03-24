@@ -1,0 +1,83 @@
+/* Importar fuente institucional — debe ir antes de @tailwind */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Variables de color de marca ─────────────────────────────────────── */
+:root {
+  --navy-700: #1e3c72;
+  --navy-800: #1a3560;
+}
+
+body {
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Colores de celdas de carry trade ────────────────────────────────── */
+
+/* Verde (carry positivo) */
+.carry-pos-1 { background-color: #e8f5e9; color: #1b5e20; }
+.carry-pos-2 { background-color: #c8e6c9; color: #1b5e20; }
+.carry-pos-3 { background-color: #a5d6a7; color: #1b5e20; }
+.carry-pos-4 { background-color: #4caf50; color: #ffffff; }
+.carry-pos-5 { background-color: #2e7d32; color: #ffffff; }
+
+/* Neutro (carry entre -5% y +2%) */
+.carry-neutral { background-color: #fff9c4; color: #5d4037; }
+
+/* Rojo (carry negativo) */
+.carry-neg-1 { background-color: #ffe0b2; color: #bf360c; }
+.carry-neg-2 { background-color: #ffab91; color: #bf360c; }
+.carry-neg-3 { background-color: #ef5350; color: #ffffff; }
+.carry-neg-4 { background-color: #c62828; color: #ffffff; }
+
+/* ─── Animaciones ─────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out both;
+}
+
+/* ─── Scrollbar personalizado ─────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* ─── Tabla de carry: filas hover ─────────────────────────────────────── */
+#carry-table-body tr:hover td {
+  filter: brightness(0.94);
+}
+
+/* ─── Tooltip de encabezado ───────────────────────────────────────────── */
+.th-tooltip {
+  position: relative;
+}
+.th-tooltip:hover .tooltip-content {
+  display: block;
+}
+.tooltip-content {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 50;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 0.75rem;
+  font-weight: 400;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 8px 10px;
+  min-width: 180px;
+  max-width: 260px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  white-space: normal;
+  line-height: 1.4;
+}
