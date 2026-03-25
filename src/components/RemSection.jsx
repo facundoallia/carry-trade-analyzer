@@ -94,12 +94,12 @@ export default function RemSection({ remData }) {
                         <td className="px-3 py-2 font-semibold text-gray-700">Mediana (%)</td>
                         {monthly.map(m => (
                           <td key={m.periodo} className="px-3 py-2 text-center tabular-nums">
-                            {m.mediana}%
+                            {Number(m.mediana).toFixed(2)}%
                           </td>
                         ))}
                         {annual.map(a => (
                           <td key={a.periodo} className="px-3 py-2 text-center tabular-nums font-semibold">
-                            {a.mediana}%
+                            {Number(a.mediana).toFixed(2)}%
                           </td>
                         ))}
                       </tr>
