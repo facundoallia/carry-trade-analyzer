@@ -27,7 +27,7 @@ export default function RemSection({ remData }) {
     <section className="bg-white border border-gray-200">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-3 text-left hover:bg-gray-50 transition-colors"
       >
         <h2 className="text-xl font-bold text-navy-700">
           Metodología: Estimación de Bandas Cambiarias
@@ -63,7 +63,7 @@ export default function RemSection({ remData }) {
 
             <div>
               <div className="flex items-baseline justify-between mb-2">
-                <h3 className="font-semibold text-navy-700">Proyecciones REM — IPC General (mediana)</h3>
+                <h3 className="font-semibold text-navy-700">Proyecciones REM: IPC General (mediana)</h3>
                 {metaDate && (
                   <span className="text-xs text-gray-400">
                     Actualizado: {metaDate} · {monthly[0]?.participantes || '~45'} participantes
@@ -114,10 +114,10 @@ export default function RemSection({ remData }) {
             <div>
               <h3 className="font-semibold text-navy-700 mb-2">Prioridad de datos para la banda</h3>
               <ol className="list-decimal list-inside space-y-1 text-sm text-gray-600">
-                <li><strong>Datos reales INDEC</strong> — Se priorizan siempre sobre cualquier proyección</li>
-                <li><strong>Proyecciones mensuales REM</strong> — Mediana de ~45 economistas profesionales</li>
-                <li><strong>Calibración con proyección anual REM</strong> — Para meses sin dato mensual específico</li>
-                <li><strong>Fallback conservador (2,0%)</strong> — Solo si no hay ningún dato disponible</li>
+                <li><strong>Datos reales INDEC</strong>: se priorizan siempre sobre cualquier proyección</li>
+                <li><strong>Proyecciones mensuales REM</strong>: mediana de ~45 economistas profesionales</li>
+                <li><strong>Calibración con proyección anual REM</strong>: para meses sin dato mensual específico</li>
+                <li><strong>Fallback conservador (2,0%)</strong>: solo si no hay ningún dato disponible</li>
               </ol>
             </div>
 

@@ -11,7 +11,7 @@ export default function Header({ mepRate, lastUpdate, onRefresh, loading }) {
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              Analizador de Carry Trade — Bonos Argentinos
+              Analizador de Carry Trade de Bonos Argentinos
             </h1>
             <p className="text-blue-200 mt-1 text-sm">
               Análisis profesional de oportunidades de carry trade en bonos del Tesoro

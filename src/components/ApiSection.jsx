@@ -42,10 +42,10 @@ export default function ApiSection() {
     <section className="bg-white border border-gray-200">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-3 text-left hover:bg-gray-50 transition-colors"
       >
         <h2 className="text-xl font-bold text-navy-700">
-          API REM — BCRA (Datos Abiertos)
+          API REM del BCRA (Datos Abiertos)
         </h2>
         {open ? <ChevronDown size={20} className="text-gray-400" /> : <ChevronRight size={20} className="text-gray-400" />}
       </button>
@@ -55,7 +55,7 @@ export default function ApiSection() {
           <div className="space-y-5 mt-4">
 
             <p className="text-sm text-gray-600 leading-relaxed">
-              Los datos de inflación proyectada provienen de la <strong>API REM — BCRA</strong>, un proyecto
+              Los datos de inflación proyectada provienen de la <strong>API REM del BCRA</strong>, un proyecto
               open-source que automatiza la lectura, normalización y distribución del Relevamiento de
               Expectativas de Mercado del Banco Central.
             </p>

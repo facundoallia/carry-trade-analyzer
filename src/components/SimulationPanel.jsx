@@ -91,7 +91,7 @@ export default function SimulationPanel({ carryData, mepRate }) {
               <option value="">Seleccione un bono...</option>
               {carryData.map(b => (
                 <option key={b.ticker} value={b.ticker}>
-                  {b.ticker} — Vence: {b.fecha_vencimiento}
+                  {b.ticker} · Vence: {b.fecha_vencimiento}
                 </option>
               ))}
             </select>

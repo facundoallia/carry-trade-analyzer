@@ -73,7 +73,7 @@ const CHART_OPTIONS = {
         title: (ctx) => {
           const dp = ctx[0].raw
           if (dp?.ticker) {
-            return `${dp.ticker} — ${new Date(dp.x).toLocaleDateString('es-AR', {
+            return `${dp.ticker} · ${new Date(dp.x).toLocaleDateString('es-AR', {
               day: '2-digit', month: 'short', year: 'numeric'
             })}`
           }
