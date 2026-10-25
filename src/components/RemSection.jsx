@@ -15,7 +15,9 @@ function periodLabel(periodo) {
 export default function RemSection({ remData }) {
   const [open, setOpen] = useState(false)
 
-  const monthly = remData?.monthly_projections || []
+  // Solo meses sin dato publicado del INDEC (el mes en curso y los siguientes)
+  const hoy = new Date().toISOString().slice(0, 7)
+  const monthly = (remData?.monthly_projections || []).filter(m => m.periodo >= hoy)
   const annual = remData?.annual_projections || []
   const meta = remData?.metadata || {}
 
@@ -71,6 +73,7 @@ export default function RemSection({ remData }) {
                 )}
               </div>
 
+              <p className="text-xs text-gray-500 mb-2">Se muestra la última carga disponible del REM, que puede no ser la publicación más reciente del BCRA.</p>
               {monthly.length > 0 || annual.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="text-sm border border-gray-200">

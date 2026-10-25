@@ -4,7 +4,7 @@ const COLUMNS = [
   { key: 'fecha_vencimiento', label: 'Vencimiento',  tip: 'Fecha en la cual el bono paga su valor nominal (100 pesos por cada bono).' },
   { key: 'dias_vencimiento',  label: 'Días',         tip: 'Cantidad de días que faltan desde hoy hasta la fecha de vencimiento del bono.' },
   { key: 'tem',               label: 'TEM',          tip: 'Tasa Efectiva Mensual: rendimiento mensual efectivo del bono en pesos.' },
-  { key: 'tna',               label: 'TNA',          tip: 'Tasa Nominal Anual: tasa anual nominal simple (TEM × 12, sin capitalización).' },
+  { key: 'tna',               label: 'TNA',          tip: 'Tasa Nominal Anual: rendimiento total hasta el vencimiento llevado a un año sin capitalizar.' },
   { key: 'tea',               label: 'TEA',          tip: 'Tasa Efectiva Anual: rendimiento anual efectivo con capitalización compuesta.' },
   { key: 'carry_1300',        label: 'Carry 1300',   tip: 'Rendimiento en USD si el MEP está a $1300 al vencimiento. Muestra "-" si excede el techo de la banda.' },
   { key: 'carry_1400',        label: 'Carry 1400',   tip: 'Rendimiento en USD si el MEP está a $1400 al vencimiento. Muestra "-" si excede el techo de la banda.' },

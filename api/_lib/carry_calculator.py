@@ -3,6 +3,7 @@ CarryTradeCalculator — lógica central del carry trade
 Adaptado para Vercel serverless: imports locales (sin prefijo backend.)
 """
 import pandas as pd
+import requests
 import math
 from datetime import date, timedelta
 from calendar import monthrange
@@ -28,11 +29,26 @@ class CarryTradeCalculator:
         self.rem_fetcher = REMDataFetcher()
         self._inflation_path_cache = {}
 
+    def _fetch_known_inflation(self) -> Dict[date, float]:
+        """IPC mensual publicado (ArgentinaDatos); si falla, los datos fijos de config."""
+        known = dict(KNOWN_INFLATION_DATA)
+        try:
+            r = requests.get('https://api.argentinadatos.com/v1/finanzas/indices/inflacion', timeout=8)
+            r.raise_for_status()
+            for row in r.json():
+                f = date.fromisoformat(row['fecha'])
+                if row.get('valor') is not None:
+                    known[date(f.year, f.month, 1)] = float(row['valor']) / 100
+        except Exception as e:
+            print(f"[WARN] No se pudo traer el IPC publicado: {e}")
+        return known
+
     def _build_calibrated_inflation_path(self, expiration_date: date) -> Dict[str, float]:
         cache_key = expiration_date.strftime('%Y-%m-%d')
         if cache_key in self._inflation_path_cache:
             return self._inflation_path_cache[cache_key]
 
+        known_inflation = self._fetch_known_inflation()
         rem_data = self.rem_fetcher.fetch_ipc_projections()
         if not rem_data:
             print("[WARN] No se pudieron obtener datos REM — usando datos conocidos + fallback")
@@ -56,8 +72,8 @@ class CarryTradeCalculator:
                 month_key = month_date.strftime('%Y-%m')
                 t2_month = date(year - 1, month + 10, 1) if month <= 2 else date(year, month - 2, 1)
 
-                if t2_month in KNOWN_INFLATION_DATA:
-                    inflation_path[month_key] = KNOWN_INFLATION_DATA[t2_month]
+                if t2_month in known_inflation:
+                    inflation_path[month_key] = known_inflation[t2_month]
                 elif t2_month in monthly_rem_data:
                     inflation_path[month_key] = monthly_rem_data[t2_month]
                 else:

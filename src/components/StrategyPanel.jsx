@@ -5,7 +5,7 @@ const CARDS = [
   },
   {
     title: 'Banda Cambiaria',
-    text: 'El análisis considera la banda cambiaria del BCRA que inició el 14/04/2025 con un crawling peg del 1% mensual. A partir del 01/01/2026, las bandas evolucionan según la inflación T-2 proyectada por el Relevamiento de Expectativas de Mercado (REM) del BCRA.'
+    text: 'El análisis considera la banda cambiaria del BCRA que inició el 14/04/2025 con un crawling peg del 1% mensual. A partir del 01/01/2026, las bandas evolucionan según la inflación de dos meses atrás: el dato del INDEC cuando ya está publicado y la proyección del Relevamiento de Expectativas de Mercado (REM) del BCRA para los meses siguientes.'
   },
   {
     title: 'Factores de Riesgo',
