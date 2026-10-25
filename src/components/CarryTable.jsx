@@ -68,7 +68,34 @@ export default function CarryTable({ data, loading, error }) {
         </div>
       )}
 
-      <div className="overflow-x-auto">
+      {/* Celular: una tarjeta por bono, sin columnas angostas */}
+      <div className="md:hidden divide-y divide-gray-100">
+        {!loading && data.length === 0 ? (
+          <p className="text-center py-10 text-gray-400">No hay datos disponibles</p>
+        ) : (
+          data.map(row => (
+            <div key={row.ticker} className="px-4 py-3">
+              <div className="flex items-baseline justify-between">
+                <span className="font-bold text-navy-700 text-base">{row.ticker}</span>
+                <span className="text-xs text-gray-500">{row.fecha_vencimiento} · {row.dias_vencimiento} días</span>
+              </div>
+              <div className="mt-1 text-xs text-gray-600 tabular-nums">
+                Precio {fmt('precio', row.precio)} · TEM {fmt('tem', row.tem)} · TEA {fmt('tea', row.tea)}
+              </div>
+              <div className="mt-2 grid grid-cols-4 gap-1">
+                {CARRY_KEYS.map(k => (
+                  <div key={k} className={`text-center py-1 tabular-nums ${getCarryClass(row[k])}`}>
+                    <div className="text-[10px] opacity-80">{k === 'carry_techo' ? 'Techo' : 'MEP ' + k.split('_')[1]}</div>
+                    <div className="text-xs font-medium">{fmt(k, row[k])}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="overflow-x-auto hidden md:block">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-navy-700">
